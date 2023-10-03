@@ -7,7 +7,7 @@ const PostsList = () => {
   let dispatch = useDispatch();
   useEffect(() => {
     dispatch(fetchPosts());
-  }, []);
+  }, [dispatch]);
   const { loading, posts, error } = useSelector(state => {
     return state.posts;
   });
@@ -24,8 +24,8 @@ const PostsList = () => {
           posts.map((e, ind) => {
             return (
               <div key={`post${ind + 1}`} className="post-details">
-                <h3>Post Title 1</h3>
-                <p>Post body 1</p>
+                <h3>{e.title}</h3>
+                <p>{e.body}</p>
               </div>
             );
           })

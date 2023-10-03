@@ -1,11 +1,15 @@
 import React from "react";
 import "./Form.css";
+import { useDispatch } from "react-redux";
+import { searchPosts } from "../redux/slice/postSlice";
 const SearchPost = () => {
   //search form state
   const [search, setSearch] = React.useState("");
+  const dispatch = useDispatch();
   //search form submit handler
   const handleSubmit = e => {
     e.preventDefault();
+    dispatch(searchPosts(search));
   };
 
   return (
@@ -20,9 +24,10 @@ const SearchPost = () => {
       <form onSubmit={handleSubmit}>
         <input
           placeholder="Search for a post"
-          type="text"
+          type="number"
           value={search}
           onChange={e => setSearch(e.target.value)}
+          required
         />
         <button type="submit">Search</button>
       </form>

@@ -7,10 +7,28 @@ const initialState = {
   loading: false,
   error: "",
 };
-export const fetchPosts = createAsyncThunk("posts/fetch", async () => {
-  const { data } = await axios.get(apiURL);
-  return data;
-});
+export const fetchPosts = createAsyncThunk(
+  "posts/fetch",
+  async (payload, { rejectWithValue, getState, dispatch }) => {
+    try {
+      const { data } = await axios.get(apiURL);
+      return data;
+    } catch (error) {
+      return rejectWithValue(error.response.status);
+    }
+  }
+);
+export const searchPosts = createAsyncThunk(
+  "posts/search",
+  async (payload, { rejectWithValue, getState, dispatch }) => {
+    try {
+      const { data } = await axios.get(`${apiURL}/${payload}`);
+      return data;
+    } catch (error) {
+      return rejectWithValue(error.response.status);
+    }
+  }
+);
 const postSlice = createSlice({
   name: "posts",
   initialState,
@@ -25,6 +43,19 @@ const postSlice = createSlice({
     builder.addCase(fetchPosts.rejected, (state, action) => {
       state.error = action.payload;
       state.loading = false;
+      state.posts = [];
+    });
+    builder.addCase(searchPosts.pending, (state, action) => {
+      state.loading = true;
+    });
+    builder.addCase(searchPosts.fulfilled, (state, action) => {
+      state.posts = [action.payload];
+      state.loading = false;
+    });
+    builder.addCase(searchPosts.rejected, (state, action) => {
+      state.error = action.payload;
+      state.loading = false;
+      state.posts = [];
     });
   },
 });
