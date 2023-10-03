@@ -1,17 +1,35 @@
 import React, { useEffect } from "react";
 import SearchPost from "./SearchPost";
 import "./Posts.css";
-
+import { useDispatch, useSelector } from "react-redux";
+import { fetchPosts } from "../redux/slice/postSlice";
 const PostsList = () => {
+  let dispatch = useDispatch();
+  useEffect(() => {
+    dispatch(fetchPosts());
+  }, []);
+  const { loading, posts, error } = useSelector(state => {
+    return state.posts;
+  });
   return (
     <>
       <SearchPost />
       <div className="posts-list">
         <h1>Total Posts 100</h1>
-        <div className="post-details">
-          <h3>Post Title 1</h3>
-          <p>Post body 1</p>
-        </div>
+        {loading ? (
+          <h2>Loading...</h2>
+        ) : error !== "" ? (
+          <h2>{error}</h2>
+        ) : (
+          posts.map((e, ind) => {
+            return (
+              <div key={`post${ind + 1}`} className="post-details">
+                <h3>Post Title 1</h3>
+                <p>Post body 1</p>
+              </div>
+            );
+          })
+        )}
       </div>
     </>
   );

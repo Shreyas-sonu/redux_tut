@@ -1,5 +1,4 @@
 import "./App.css";
-
 import NotesList from "./components/PostsList";
 
 function App() {
